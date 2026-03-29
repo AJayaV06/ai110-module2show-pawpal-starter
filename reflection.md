@@ -13,16 +13,20 @@
 
 -- Classes: pet, owner, task, schedule
 -- Pet: name, age, what animal, what breed
+    -- stores metadata and can get the information through get_info
 -- Owner: name, age, pets list
--- task: what task, when to do, repeat?, how long does it take
--- schedule: list of tasks in the schedule
+    -- manages pets, manages schedule availabilty, represents the human user
+-- Task: what task, when to do, repeat?, how long does it take
+    -- represents the task needed to take care of the pet, validate fields, and checks for repetition of tasks
+-- Schedule: list of tasks in the schedule
+    -- maintaisn tasks for a single task, sorts by priority, detects conflicts, generates a reasoning, and summary
 
 **b. Design changes**
 
 - Did your design change during implementation?
 - If yes, describe at least one change and why you made it.
 
----
+-- Yes, I made a few changes. One major change I made was having a relationship between a task and a pet. Intially, there was no relationship but when mentioned by Copilot I relaized that this is a important relationship. If a owner has multiple pets and a task is "feed pet", it might be hard to identify the specific pet. So having a relationship between the 2 classes would help specify the tasks for specific pets.
 
 ## 2. Scheduling Logic and Tradeoffs
 
