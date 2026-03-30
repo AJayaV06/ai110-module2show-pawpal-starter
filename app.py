@@ -120,8 +120,16 @@ if owner.pets:
                             st.success(f"Task '{selected_complete}' marked complete and next {clone.repeat_rule} task created for {clone.due_date}")
                         else:
                             st.success(f"Task '{selected_complete}' marked complete")
-                        # Set a flag to refresh sections without stopping the script.
                         st.session_state["task_completed"] = True
+                    except ValueError as e:
+                        st.error(str(e))
+
+                selected_remove = st.selectbox("Remove task", task_titles, key=f"remove_{p.name}")
+                if st.button("Remove selected task", key=f"remove_btn_{p.name}"):
+                    try:
+                        owner.remove_task(p.name, selected_remove)
+                        st.success(f"Task '{selected_remove}' removed from {p.name}")
+                        st.session_state["task_removed"] = True
                     except ValueError as e:
                         st.error(str(e))
             else:
@@ -140,9 +148,37 @@ st.session_state.selected_date = selected_date
 if st.button("Generate schedule"):
     scheduler = Scheduler(owner=owner, date=selected_date)
     schedule = scheduler.generate_daily_plan()
+    scheduler.sort_tasks_by_time()
 
     if schedule:
         st.success("Schedule generated")
+
+        task_rows = []
+        for t in scheduler.planned_tasks:
+            task_rows.append(
+                {
+                    "Time": t.scheduled_start.strftime("%H:%M") if t.scheduled_start else "TBD",
+                    "End": t.get_end_time().strftime("%H:%M") if t.get_end_time() else "TBD",
+                    "Task": t.title,
+                    "Pet": t.pet_name,
+                    "Duration (min)": t.duration_minutes,
+                    "Priority": t.priority,
+                    "Repeat": t.repeat_rule or "none",
+                    "Completed": t.completed,
+                }
+            )
+
+        st.table(task_rows)
+
+        conflicts = scheduler.check_conflicts()
+        if conflicts:
+            st.warning("Scheduling conflict(s) detected. Please review and adjust:")
+            for conflict in conflicts:
+                st.warning(conflict)
+        else:
+            st.success("No conflicts detected.")
+
+        st.markdown("### Plan explanation")
         st.text(scheduler.explain_plan())
     else:
         st.warning("No tasks could be scheduled (check available hours / task duration)")

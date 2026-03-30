@@ -231,6 +231,15 @@ class Owner:
         self.available_start = start
         self.available_end = end
 
+    def remove_task(self, pet_name: str, task_title: str) -> None:
+        """Remove a task by title from a specific pet."""
+        pet = self.get_pet(pet_name)
+        if pet is None:
+            raise ValueError(f"Pet '{pet_name}' not found")
+        if not any(t.title == task_title for t in pet.tasks):
+            raise ValueError(f"Task '{task_title}' not found for pet '{pet_name}'")
+        pet.remove_task(task_title)
+
     @property
     def available_minutes(self) -> int:
         """Return number of minutes available in owner's availability window."""

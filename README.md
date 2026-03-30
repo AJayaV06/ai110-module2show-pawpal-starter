@@ -31,6 +31,19 @@ PawPal+ now supports:
 - recurring task rules (`daily`, `weekly`, `monthly`) with auto-rescheduling on completion
 - conflict detection for overlapping tasks and warnings in plan output
 
+## codebaseFeatures
+
+- Sorting by time (`Scheduler.sort_tasks_by_time`)
+- Conflict warnings (`Scheduler.check_conflicts`)
+- Daily and weekly recurrence handling (`Task.next_due_date`, `Task.clone_for_next_occurrence`, `Owner.mark_task_complete`)
+- Task filtering by pet and completion status (`Owner.filter_tasks`)
+- Owner availability window enforcement in schedule generation
+- User-facing summary generation (`Scheduler.get_summary`)
+
+## DEMO 
+![alt text](image.png)
+![alt text](image-1.png)
+
 ## Getting started
 
 ### Setup
